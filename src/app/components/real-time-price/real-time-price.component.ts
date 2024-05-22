@@ -1,15 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Chart, registerables} from 'chart.js';
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-real-time-price',
   templateUrl: './real-time-price.component.html',
-  standalone: true,
   styleUrls: ['./real-time-price.component.css']
 })
 export class RealTimePriceComponent implements OnInit, OnDestroy {
   public chart: any;
-  private socket: any
+  private socket: WebSocket | undefined;
 
   constructor() {
     Chart.register(...registerables);
@@ -29,7 +29,6 @@ export class RealTimePriceComponent implements OnInit, OnDestroy {
   private initializeChart(): void {
     const ctx = document.getElementById('myChart') as HTMLCanvasElement | null;
     if (!ctx) {
-      console.error('Cannot get the context of the chart');
       return;
     }
 
@@ -60,7 +59,7 @@ export class RealTimePriceComponent implements OnInit, OnDestroy {
     this.socket.onopen = (event: Event) => {
       this.socket?.send(JSON.stringify({
         "type": "hello",
-        "apikey": "A4966929-79A2-462B-BD45-C6AB3243E283",
+        "apikey": environment.coinApiKey,
         "subscribe_data_type": ["trade"],
         "subscribe_filter_symbol_id": ["BITSTAMP_SPOT_BTC_USD$", "BITFINEX_SPOT_BTC_LTC$"]
       }));
@@ -68,7 +67,6 @@ export class RealTimePriceComponent implements OnInit, OnDestroy {
 
     this.socket.onmessage = (event: any) => {
       const data = JSON.parse(event.data);
-      console.log('Received WebSocket data:', data);
 
       if (this.chart) {
         // Add new data to the chart
@@ -86,8 +84,7 @@ export class RealTimePriceComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.socket.onerror = (error: any) => {
-      console.log(`WebSocket error: ${error}`);
+    this.socket.onerror = (error: Event) => {
     };
   }
 }

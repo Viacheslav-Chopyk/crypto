@@ -6,8 +6,6 @@ import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-historical-price-chart',
-  standalone: true,
-  imports: [],
   templateUrl: './historical-price-chart.component.html',
   styleUrl: './historical-price-chart.component.css'
 })
