@@ -8,15 +8,14 @@ import { HistoricalPriceChartComponent } from './components/historical-price-cha
 import {RealTimePriceComponent} from "./components/real-time-price/real-time-price.component";
 import {HistoricalDataService} from "./services/historical-data.service";
 import {RealTimeDataService} from "./services/real-time-data.service";
-import {RouterOutlet} from "@angular/router";
 
 const config: SocketIoConfig = { url: 'wss://ws-sandbox.coinapi.io/v1/', options: {} };
 
 @NgModule({
   declarations: [
+    AppComponent,
     HistoricalPriceChartComponent,
     RealTimePriceComponent,
-    AppComponent,
   ],
   imports: [
     BrowserModule,

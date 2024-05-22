@@ -8,7 +8,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class HistoricalDataService {
-  private apiUrl = 'https://rest.coinapi.io/v1/ohlcv';
 
   constructor(private http: HttpClient) {}
 
@@ -16,7 +15,7 @@ export class HistoricalDataService {
     const headers = new HttpHeaders({
       'X-CoinAPI-Key': environment.coinApiKey
     });
-    const url = `${this.apiUrl}/BINANCE_SPOT_ETH_BTC/history?period_id=1MTH&time_start=2023-03-01T00:00:00`;
+    const url = `${environment.apiUrl}/BINANCE_SPOT_ETH_BTC/history?period_id=1MTH&time_start=2023-03-01T00:00:00`;
     return this.http.get<any>(url, { headers });
   }
 }

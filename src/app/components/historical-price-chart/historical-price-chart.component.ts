@@ -22,7 +22,6 @@ export class HistoricalPriceChartComponent implements OnInit {
 
   ngOnInit() {
     this.historicalDataService.getHistoricalData('BTC').subscribe(data => {
-      console.log(data)
       this.lineChartData[0].data = data.map((d: { price_close: any; }) => d.price_close);
       // this.lineChartLabels = data.map((d: { time_close: string; }) => d.time_close.split('T')[0]);
     });
