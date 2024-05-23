@@ -54,8 +54,9 @@ export class HistoricalPriceChartComponent implements OnInit {
     const baseAsset = 'ETH';
     const quoteAsset = 'BTC';
     const periodId = '1MTH';
-    const timeStart = '2023-03-01T00:00:00';
-    this.historicalDataService.getHistoricalData(exchange, baseAsset, quoteAsset, periodId, timeStart).subscribe((res: ICryptoData[]) => {
+    const timeStart = '2022-12-01T00:00:00';
+    const timeEnd = '2023-12-01T00:00:00';
+    this.historicalDataService.getHistoricalData(exchange, baseAsset, quoteAsset, periodId, timeStart,timeEnd).subscribe((res: ICryptoData[]) => {
       res.forEach(item => {
         const month = new Date(item.time_close).toLocaleString('en-US', {month: 'long'});
         this.chart.data.labels.push(month);

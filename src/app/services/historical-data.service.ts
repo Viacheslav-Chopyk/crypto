@@ -15,12 +15,12 @@ export class HistoricalDataService {
     private http: HttpClient
   ) {}
 
- getHistoricalData(exchange: string, baseAsset: string, quoteAsset: string, periodId: string, timeStart: string
+ getHistoricalData(exchange: string, baseAsset: string, quoteAsset: string, periodId: string, timeStart: string, timeEnd: string
   ): Observable<ICryptoData[]> {
     const headers = new HttpHeaders({
       'X-CoinAPI-Key': environment.coinApiKey
     });
-    const url = `${environment.apiUrl}/${exchange}_SPOT_${baseAsset}_${quoteAsset}/history?period_id=${periodId}&time_start=${timeStart}`;
+    const url = `${environment.apiUrl}/${exchange}_SPOT_${baseAsset}_${quoteAsset}/history?period_id=${periodId}&time_start=${timeStart}&time_end=${timeEnd}`;
     return this.http.get<ICryptoData[]>(url, { headers });
   }
 }
