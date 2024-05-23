@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HistoricalDataService } from '../../services/historical-data.service';
-import {ChartDataset, ChartOptions } from 'chart.js';
-import {HttpClient} from "@angular/common/http";
-// import { Label } from 'ng2-charts';
+import {HistoricalDataService} from '../../services/historical-data.service';
+import {Chart, registerables} from "chart.js";
+import {ICryptoData} from "../../interface/crypto-interface";
 
 @Component({
   selector: 'app-historical-price-chart',
@@ -10,21 +9,52 @@ import {HttpClient} from "@angular/common/http";
   styleUrl: './historical-price-chart.component.css'
 })
 export class HistoricalPriceChartComponent implements OnInit {
-  public lineChartData: ChartDataset[] = [{ data: [], label: 'Price' }];
-  // public lineChartLabels: Label[] = [];
-  public lineChartOptions: ChartOptions = { responsive: true };
+  public chart: any;
 
   constructor(
     private historicalDataService: HistoricalDataService,
-    private http: HttpClient,
   ) {
+    Chart.register(...registerables);
+  }
+  ngOnInit() {
+    this.initializeChart()
+    this.getData()
   }
 
-  ngOnInit() {
-    this.historicalDataService.getHistoricalData('BTC').subscribe(data => {
-      this.lineChartData[0].data = data.map((d: { price_close: any; }) => d.price_close);
-      // this.lineChartLabels = data.map((d: { time_close: string; }) => d.time_close.split('T')[0]);
+  private initializeChart(): void {
+    const ctx = document.getElementById('myChart') as HTMLCanvasElement | null;
+    if (!ctx) {
+      return;
+    }
+
+    this.chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          data: [],
+          label: 'BTC/USD',
+          borderColor: '#3e95cd',
+          fill: false
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
     });
   }
-
+  private getData(): void {
+    this.historicalDataService.getHistoricalData().subscribe((res: ICryptoData[]) => {
+      res.forEach(item => {
+        const month = new Date(item.time_close).toLocaleString('en-US', { month: 'long' });
+        this.chart.data.labels.push(month);
+        this.chart.data.datasets[0].data.push(item.price_high);
+      });
+      this.chart.update();
+    });
+  }
 }
