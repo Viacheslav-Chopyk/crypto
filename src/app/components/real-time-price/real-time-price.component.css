@@ -1,0 +1,19 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0;
+
+  .container {
+    display: flex;
+    border: 1px solid black;
+  }
+
+  .item-symbol, .item-price, .item-time {
+    width: 150px;
+
+    p {
+      text-align: center;
+    }
+  }
+}

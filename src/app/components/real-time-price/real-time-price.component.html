@@ -1,1 +1,25 @@
-<canvas id="myChart"></canvas>
+<div class="wrapper">
+  <div class="container">
+    <div class="item-symbol">
+      <p>Symbol:</p>
+      <p>BTC/USD</p>
+    </div>
+    <div class="item-price">
+      <p>Price:</p>
+      @if (!realTimeData) {
+        <p>Loading...</p>
+      } @else {
+        <p>{{ realTimeData.price | currency:'USD'}}</p>
+      }
+    </div>
+    <div class="item-time">
+      <p>Time:</p>
+      @if (!realTimeData) {
+        <p>Loading...</p>
+      } @else {
+        <p>{{ realTimeData.time_coinapi | date: dateFormat }}</p>
+      }
+    </div>
+  </div>
+</div>
+

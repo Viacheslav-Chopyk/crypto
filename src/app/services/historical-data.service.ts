@@ -1,22 +1,26 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import {ICryptoData} from "../interface/crypto-interface";
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class HistoricalDataService {
-  private apiUrl = 'https://rest.coinapi.io/v1/ohlcv';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient
+  ) {}
 
-  getHistoricalData(symbol: string, period: string = '30DAY', limit: number = 30): Observable<any> {
+ getHistoricalData(exchange: string, baseAsset: string, quoteAsset: string, periodId: string, timeStart: string, timeEnd: string
+  ): Observable<ICryptoData[]> {
     const headers = new HttpHeaders({
       'X-CoinAPI-Key': environment.coinApiKey
     });
-    const url = `${this.apiUrl}/BINANCE_SPOT_ETH_BTC/history?period_id=1MTH&time_start=2023-03-01T00:00:00`;
-    return this.http.get<any>(url, { headers });
+    const url = `${environment.apiUrl}/${exchange}_SPOT_${baseAsset}_${quoteAsset}/history?period_id=${periodId}&time_start=${timeStart}&time_end=${timeEnd}`;
+    return this.http.get<ICryptoData[]>(url, { headers });
   }
 }
