@@ -6,13 +6,19 @@
     </div>
     <div class="item-price">
       <p>Price:</p>
-      <p *ngIf="!realTimeData.price">Loading...</p>
-      <p>{{ realTimeData.price | currency:'USD'}}</p>
+      @if (!realTimeData) {
+        <p>Loading...</p>
+      } @else {
+        <p>{{ realTimeData.price | currency:'USD'}}</p>
+      }
     </div>
     <div class="item-time">
       <p>Time:</p>
-      <p *ngIf="!realTimeData.time_coinapi">Loading...</p>
-      <p>{{ realTimeData.time_coinapi | date: dateFormat }}</p>
+      @if (!realTimeData) {
+        <p>Loading...</p>
+      } @else {
+        <p>{{ realTimeData.time_coinapi | date: dateFormat }}</p>
+      }
     </div>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HistoricalDataService} from '../../services/historical-data.service';
 import {Chart, registerables} from "chart.js";
 import {ICryptoData} from "../../interface/crypto-interface";
@@ -16,6 +16,7 @@ export class HistoricalPriceChartComponent implements OnInit {
   ) {
     Chart.register(...registerables);
   }
+
   ngOnInit() {
     this.initializeChart()
     this.getData()
@@ -47,10 +48,16 @@ export class HistoricalPriceChartComponent implements OnInit {
       }
     });
   }
+
   private getData(): void {
-    this.historicalDataService.getHistoricalData().subscribe((res: ICryptoData[]) => {
+    const exchange = 'BINANCE';
+    const baseAsset = 'ETH';
+    const quoteAsset = 'BTC';
+    const periodId = '1MTH';
+    const timeStart = '2023-03-01T00:00:00';
+    this.historicalDataService.getHistoricalData(exchange, baseAsset, quoteAsset, periodId, timeStart).subscribe((res: ICryptoData[]) => {
       res.forEach(item => {
-        const month = new Date(item.time_close).toLocaleString('en-US', { month: 'long' });
+        const month = new Date(item.time_close).toLocaleString('en-US', {month: 'long'});
         this.chart.data.labels.push(month);
         this.chart.data.datasets[0].data.push(item.price_high);
       });

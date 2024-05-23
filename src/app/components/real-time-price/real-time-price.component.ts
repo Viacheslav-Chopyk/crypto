@@ -8,7 +8,8 @@ import {ITrade} from "../../interface/crypto-interface";
   styleUrls: ['./real-time-price.component.css']
 })
 export class RealTimePriceComponent implements OnInit, OnDestroy {
-  public realTimeData: ITrade = {} as ITrade;
+  public dateFormat = 'd MMMM h:mm a'
+  public realTimeData: ITrade;
   private socket: WebSocket | undefined;
   private readonly WEBSOCKET_URL = 'wss://ws.coinapi.io/v1/';
   private readonly WEBSOCKET_MESSAGE = {
@@ -17,7 +18,6 @@ export class RealTimePriceComponent implements OnInit, OnDestroy {
     subscribe_data_type: ["trade"],
     subscribe_filter_symbol_id: ["BITSTAMP_SPOT_BTC_USD$", "BITFINEX_SPOT_BTC_LTC$"]
   };
-  dateFormat = 'd MMMM h:mm a'
 
   constructor() {
 
