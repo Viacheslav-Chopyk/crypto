@@ -1,15 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HistoricalDataService} from '../../services/historical-data.service';
 import {Chart, registerables} from "chart.js";
 import {ICryptoData} from "../../interface/crypto-interface";
+import {Subject, takeUntil} from "rxjs";
 
 @Component({
   selector: 'app-historical-price-chart',
   templateUrl: './historical-price-chart.component.html',
   styleUrl: './historical-price-chart.component.css'
 })
-export class HistoricalPriceChartComponent implements OnInit {
+export class HistoricalPriceChartComponent implements OnInit, OnDestroy {
   public chart: any;
+  private destroy$: Subject<void> = new Subject<void>();
 
   constructor(
     private historicalDataService: HistoricalDataService,
@@ -56,13 +58,22 @@ export class HistoricalPriceChartComponent implements OnInit {
     const periodId = '1MTH';
     const timeStart = '2022-12-01T00:00:00';
     const timeEnd = '2023-12-01T00:00:00';
-    this.historicalDataService.getHistoricalData(exchange, baseAsset, quoteAsset, periodId, timeStart,timeEnd).subscribe((res: ICryptoData[]) => {
-      res.forEach(item => {
-        const month = new Date(item.time_close).toLocaleString('en-US', {month: 'long'});
-        this.chart.data.labels.push(month);
-        this.chart.data.datasets[0].data.push(item.price_high);
-      });
+    this.historicalDataService.getHistoricalData(exchange, baseAsset, quoteAsset, periodId, timeStart,timeEnd)
+      .pipe(
+        takeUntil(this.destroy$),
+      )
+      .subscribe((res: ICryptoData[]) => {
+        res.forEach(item => {
+          const month = new Date(item.time_close).toLocaleString('en-US', {month: 'long'});
+          this.chart.data.labels.push(month);
+          this.chart.data.datasets[0].data.push(item.price_high);
+        });
       this.chart.update();
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
